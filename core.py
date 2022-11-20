@@ -18,6 +18,12 @@ import imp
 import constants
 
 
+def joinPaths(*paths):
+    if not os.altsep:
+        os.altsep = '\\'
+    return os.path.join(*paths).replace(os.altsep, os.sep)
+
+
 def run(options):
     parser = argparse.ArgumentParser(description='Launching environment using...')
     parser.add_argument('packages', metavar='env', type=str, nargs='+',
@@ -31,10 +37,9 @@ def run(options):
         # print pth
         # print os.listdir(pth)
         for pkg in os.listdir(pth):
-            foundPackages.append(os.path.join(pth, pkg).replace(os.sep, os.altsep))
+            foundPackages.append(joinPaths(pth, pkg))
 
     env = Env()
-    # pythonPaths = []
     for pkgNameVer in args.packages:
         pkgName, _, pkgVer = pkgNameVer.partition('-')
         if not pkgVer:
@@ -42,23 +47,15 @@ def run(options):
         for pkgPaths in foundPackages:
             # get pkg description file
             if pkgName in pkgPaths:
-                verPath = os.path.join(pkgPaths, pkgVer).replace(os.sep, os.altsep)
+                verPath = joinPaths(pkgPaths, pkgVer)
                 mod = importModuleFromPath('p3launchPkg', verPath)
-                # env.PATH += mod.PATH
-                # env.PYTHONPATH += mod.PYTHONPATH
                 mod.commands(env)
 
-    # oEnv = os.environ.copy()
     nEnv = env.getEnv()
     nEnv.update({'P3LAUNCHPKGPATHS': ';'.join(constants.P3LAUNCHPKGPATHS)})
 
-    # cmd = 'prompt $g $c{}$f'.format(options)
     cmd = 'cmd /Q /K prompt $g $c{}$f'.format(' '.join(options))
-    # print cmd
     p = subprocess.Popen(cmd, env=nEnv, creationflags=subprocess.CREATE_NEW_CONSOLE)
-    # stdout, stderr = p.communicate()
-    # sys.exit(p.returncode)
-    # p.wait()
     return p
 
 
