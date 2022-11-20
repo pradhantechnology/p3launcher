@@ -1,0 +1,11 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+
+autonumber
+User -> p3launchPackageDeployer: sends path to the package git repo
+p3launchPackageDeployer -> LocalPackageRepo: query metadata
+LocalPackageRepo -> p3launchPackageDeployer: return metadata
+p3launchPackageDeployer -> DeployedPackageRepo: create new version folder
+p3launchPackageDeployer -> DeployedPackageRepo: git clone
+p3launchPackageDeployer -> DeployedPackageRepo: cleanup folder
+@enduml
