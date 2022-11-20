@@ -1,0 +1,14 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+
+autonumber
+
+User -> p3launcher: launch environment
+
+p3launcher -> Package: query required packages
+p3launcher <-> Package: return requirements
+p3launcher -> p3launcher: resolve package versions
+p3launcher -> p3launcher: construct new environment
+p3launcher -> User: return new terminal
+
+@enduml
