@@ -54,8 +54,11 @@ def run(options):
     nEnv = env.getEnv()
     nEnv.update({'P3LAUNCHPKGPATHS': ';'.join(constants.P3LAUNCHPKGPATHS)})
 
-    cmd = 'cmd /Q /K prompt $g $c{}$f'.format(' '.join(options))
-    p = subprocess.Popen(cmd, env=nEnv, creationflags=subprocess.CREATE_NEW_CONSOLE)
+    # cmd = 'cmd /Q /K prompt $g $c{}$f'.format(' '.join(options))
+    cmd = ['cmd', '/Q', '/K', 'prompt', '$g', '$c{}$f'.format(' '.join(options))]
+    # p = subprocess.Popen(cmd, env=nEnv, creationflags=subprocess.CREATE_NEW_CONSOLE)
+    p = subprocess.Popen(cmd, env=nEnv)
+    p.communicate()
     return p
 
 
